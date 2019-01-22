@@ -18,23 +18,27 @@ void changeVol(bool wantsToMute)
 	{
 		//cout << "SPOTIFY IS ALREADY UNMUTED...\n";
 		isMute = 0;
+		return;
 	}
 	else if (wantsToMute && isMute)						//ad is playing and it's already muted
 	{
 		//cout << "SPOTIFY IS ALREADY MUTED...\n";
 		isMute = 1;
+		return;
 	}
 	else if (wantsToMute && !isMute)					//ad is playing and it wants to mute
 	{
 		system("nircmd.exe changeappvolume spotify.exe -10");
 		cout << "MUTING SPOTIFY...\n";
 		isMute = 1;
+		return;
 	}
 	else if (!wantsToMute && isMute)					//ad is no longer playing and it wants to unmute
 	{
 		system("nircmd.exe changeappvolume spotify.exe .02");
 		cout << "UNMUTING SPOTIFY...\n";
 		isMute = 0;
+		return;
 	}
 }
 
