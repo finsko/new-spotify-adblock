@@ -11,19 +11,19 @@ using namespace std;
 
 bool isMute = 0;
 bool isPaused = 1;
+bool foundSpotify = 0;
+HWND spotifyHandle = NULL;
 
 void changeVol(bool wantsToMute)
 {
 	if (!wantsToMute && !isMute)						//ad is no longer playing and it's already unmuted
 	{
 		//cout << "SPOTIFY IS ALREADY UNMUTED...\n";
-		isMute = 0;
 		return;
 	}
 	else if (wantsToMute && isMute)						//ad is playing and it's already muted
 	{
 		//cout << "SPOTIFY IS ALREADY MUTED...\n";
-		isMute = 1;
 		return;
 	}
 	else if (wantsToMute && !isMute)					//ad is playing and it wants to mute
@@ -42,34 +42,8 @@ void changeVol(bool wantsToMute)
 	}
 }
 
-BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
+void startLoop()
 {
-
-	if (IsWindowVisible(hwnd)) // check whether window is visible
-	{
-		char wnd_title[256];
-		GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
-		string temptitle = wnd_title;
-
-		if ((temptitle == "Spotify") || (temptitle == "Learn More") || (temptitle == "Learn more") || (temptitle == "Advertisement"))
-		{
-			cout << "AD IS PLAYING...\n";
-			changeVol(1);
-			//Sleep(30000);
-			return false;					//prevents EnumWindows from enumerating again
-		}
-		else
-		{
-			changeVol(0);
-		}
-	}
-	return true;							//function must return true if you want to continue enumeration
-}
-
-int main()
-{
-	cout << "MAKE SURE SPOTIFY IS PAUSED.\nPRESS THE PLAY/PAUSE MULTIMEDIA KEY TO BEGIN...\n";
-
 	while (1)
 	{
 		if (GetAsyncKeyState(VK_MEDIA_PLAY_PAUSE) & 1)
@@ -86,9 +60,50 @@ int main()
 		}
 		if (!isPaused)
 		{
-			//run the actual program
-			EnumWindows(EnumWindowsProc, 0);
+			char wnd_title[256];
+			GetWindowText(spotifyHandle, wnd_title, sizeof(wnd_title));
+			string temptitle = wnd_title;
+			if ((temptitle == "Spotify") || (temptitle == "Learn More") || (temptitle == "Learn more") || (temptitle == "Advertisement"))
+			{
+				changeVol(1);
+			}
+			else
+			{
+				changeVol(0);
+			}
 		}
 		Sleep(2000);
 	}
+}
+
+
+
+BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
+{
+
+	if (IsWindowVisible(hwnd)) // check whether window is visible
+	{
+		char wnd_title[256];
+		GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
+		string temptitle = wnd_title;
+
+		if (temptitle == "Spotify")
+		{
+			cout << "FOUND SPOTIFY WINDOW...\n";
+			foundSpotify = 1;
+			spotifyHandle = hwnd;
+
+			cout << "PRESS THE PLAY/PAUSE MULTIMEDIA KEY TO BEGIN...\n";
+			cout << "STARTING LOOP...\n";
+			startLoop();
+		}		
+	}
+	return true;			//function must return true if you want to continue enumeration
+}
+
+int main()
+{
+	cout << "MAKE SURE SPOTIFY IS PAUSED.\nPRESS ANY KEY TO BEGIN...\n";
+	cin.ignore();
+	EnumWindows(EnumWindowsProc, 0);
 }
