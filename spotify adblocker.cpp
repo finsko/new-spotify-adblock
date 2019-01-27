@@ -28,14 +28,14 @@ void changeVol(bool wantsToMute)
 	}
 	else if (wantsToMute && !isMute)					//ad is playing and it wants to mute
 	{
-		system("nircmd.exe changeappvolume spotify.exe -10");
+		system("nircmd.exe muteappvolume spotify.exe 1");
 		cout << "MUTING SPOTIFY...\n";
 		isMute = 1;
 		return;
 	}
 	else if (!wantsToMute && isMute)					//ad is no longer playing and it wants to unmute
 	{
-		system("nircmd.exe changeappvolume spotify.exe .02");
+		system("nircmd.exe muteappvolume spotify.exe 0");
 		cout << "UNMUTING SPOTIFY...\n";
 		isMute = 0;
 		return;
