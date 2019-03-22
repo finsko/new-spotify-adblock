@@ -63,24 +63,23 @@ void startLoop()
 			char wnd_title[256];
 			GetWindowText(spotifyHandle, wnd_title, sizeof(wnd_title));
 			string temptitle = wnd_title;
-			if ((temptitle == "Spotify") || (temptitle == "Learn More") || (temptitle == "Learn more") || (temptitle == "Advertisement"))
+
+			if (temptitle.find("-") != string::npos)							//all songs have a hyphen in their names
 			{
-				changeVol(1);
+				changeVol(0);			//it's a song
 			}
 			else
 			{
-				changeVol(0);
+				changeVol(1);			//it's an ad
 			}
 		}
-		Sleep(2000);
+		Sleep(1000);
 	}
 }
 
 
-
 BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
 {
-
 	if (IsWindowVisible(hwnd)) // check whether window is visible
 	{
 		char wnd_title[256];
@@ -104,6 +103,6 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
 int main()
 {
 	cout << "MAKE SURE SPOTIFY IS PAUSED.\nPRESS ANY KEY TO BEGIN...\n";
-	cin.ignore();
+	cin.ignore();		//ignores input so pressing a key does nothing but continue the execution
 	EnumWindows(EnumWindowsProc, 0);
 }
