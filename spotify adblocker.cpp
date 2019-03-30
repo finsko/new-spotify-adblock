@@ -86,7 +86,7 @@ BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam)
 		GetWindowText(hwnd, wnd_title, sizeof(wnd_title));
 		string temptitle = wnd_title;
 
-		if (temptitle == "Spotify")
+		if (temptitle == "Spotify Free")
 		{
 			cout << "FOUND SPOTIFY WINDOW...\n";
 			foundSpotify = 1;
